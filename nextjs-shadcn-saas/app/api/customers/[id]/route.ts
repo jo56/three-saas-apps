@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
-import { mockCustomers } from '@/lib/mock-data';
+import { prisma } from '@/lib/prisma';
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const customer = mockCustomers.find(c => c.id === params.id);
+  const customer = await prisma.customer.findUnique({
+    where: { id: params.id }
+  });
 
   if (!customer) {
     return NextResponse.json({ error: 'Customer not found' }, { status: 404 });

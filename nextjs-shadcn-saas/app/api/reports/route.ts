@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
-import { mockReports } from '@/lib/mock-data';
+import { prisma } from '@/lib/prisma';
 
 export async function GET() {
-  return NextResponse.json(mockReports);
+  const reports = await prisma.report.findMany({
+    orderBy: { createdAt: 'desc' }
+  });
+  return NextResponse.json(reports);
 }

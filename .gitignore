@@ -107,3 +107,15 @@ pids/
 # Temporary folders
 tmp/
 temp/
+
+# Database
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+postgres-data/
+pgdata/
+
+# Prisma
+.env
+prisma/.env

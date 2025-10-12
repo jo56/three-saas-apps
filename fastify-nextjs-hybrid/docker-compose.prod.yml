@@ -1,0 +1,60 @@
+# Production Docker Compose Configuration
+# Usage: docker-compose -f docker-compose.prod.yml up -d
+
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: fastify-nextjs-postgres-prod
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-hybriduser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}  # Set via environment variable
+      POSTGRES_DB: ${POSTGRES_DB:-hybriddb}
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-hybriduser} -d ${POSTGRES_DB:-hybriddb}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+    # Don't expose port in production unless needed
+    # Use internal network communication only
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fastify-nextjs-backend-prod
+    restart: always
+    ports:
+      - "${BACKEND_PORT:-3001}:3001"
+    environment:
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-hybriduser}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-hybriddb}?schema=public"
+      NODE_ENV: production
+      PORT: 3001
+    env_file:
+      - ./backend/.env.production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      start_period: 40s
+      retries: 3
+    command: sh -c "npx prisma db push && node dist/index.js"
+    # Note: Remove seed command in production, seed manually if needed
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data_prod:

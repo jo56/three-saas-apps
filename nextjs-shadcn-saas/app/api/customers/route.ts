@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
-import { mockCustomers } from '@/lib/mock-data';
+import { prisma } from '@/lib/prisma';
 
 export async function GET() {
-  return NextResponse.json(mockCustomers);
+  const customers = await prisma.customer.findMany({
+    orderBy: { createdAt: 'desc' }
+  });
+  return NextResponse.json(customers);
 }

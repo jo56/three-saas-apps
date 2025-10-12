@@ -1,9 +1,7 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import { prisma } from './lib/prisma.js';
 import {
-  mockCustomers,
-  mockTeamMembers,
-  mockReports,
   mockActivities,
   mockAnalyticsData,
   mockKPIs,
@@ -38,12 +36,17 @@ fastify.get('/api/analytics', async (request, reply) => {
 
 // Customers API
 fastify.get('/api/customers', async (request, reply) => {
-  return mockCustomers;
+  const customers = await prisma.customer.findMany({
+    orderBy: { createdAt: 'desc' }
+  });
+  return customers;
 });
 
 fastify.get('/api/customers/:id', async (request, reply) => {
   const { id } = request.params as { id: string };
-  const customer = mockCustomers.find(c => c.id === id);
+  const customer = await prisma.customer.findUnique({
+    where: { id }
+  });
 
   if (!customer) {
     reply.code(404);
@@ -55,12 +58,18 @@ fastify.get('/api/customers/:id', async (request, reply) => {
 
 // Team API
 fastify.get('/api/team', async (request, reply) => {
-  return mockTeamMembers;
+  const teamMembers = await prisma.teamMember.findMany({
+    orderBy: { createdAt: 'desc' }
+  });
+  return teamMembers;
 });
 
 // Reports API
 fastify.get('/api/reports', async (request, reply) => {
-  return mockReports;
+  const reports = await prisma.report.findMany({
+    orderBy: { createdAt: 'desc' }
+  });
+  return reports;
 });
 
 // Billing API

@@ -2,6 +2,8 @@
 
 This repository demonstrates three different architectural approaches for building a B2B SaaS application using shadcn/ui components. All three versions look identical but showcase different tech stack architectures.
 
+**NEW**: All projects now use **PostgreSQL** with **Prisma ORM** for data persistence! See [DATABASE_SETUP.md](./DATABASE_SETUP.md) for setup instructions.
+
 ## Version 1: Full Next.js Stack (`nextjs-shadcn-saas/`)
 
 **Architecture**: Monolithic full-stack framework
@@ -9,8 +11,8 @@ This repository demonstrates three different architectural approaches for buildi
 ### Tech Stack:
 - **Frontend**: Next.js 14 (App Router)
 - **Backend**: Next.js API Routes
+- **Database**: PostgreSQL + Prisma ORM
 - **Styling**: Tailwind CSS + shadcn/ui
-- **Data**: Mock data served via API routes
 
 ### Structure:
 ```
@@ -39,7 +41,15 @@ nextjs-shadcn-saas/
 ### How to Run:
 ```bash
 cd nextjs-shadcn-saas
+
+# Start PostgreSQL container
+docker-compose up -d
+
+# Install dependencies and setup database
 npm install
+npm run db:setup
+
+# Start the application
 npm run dev
 # Visit http://localhost:3000
 ```
@@ -65,8 +75,8 @@ npm run dev
 ### Tech Stack:
 - **Backend**: Fastify (Node.js)
 - **Frontend**: React + Vite + React Router
+- **Database**: PostgreSQL + Prisma ORM
 - **Styling**: Tailwind CSS + shadcn/ui
-- **Data**: REST API with mock data
 
 ### Structure:
 ```
@@ -90,7 +100,17 @@ fastify-shadcn-saas/
 ### How to Run:
 ```bash
 cd fastify-shadcn-saas
+
+# Start PostgreSQL container
+docker-compose up -d
+
+# Install dependencies
 npm run install:all
+
+# Setup database (from backend directory)
+cd backend && npm run db:setup && cd ..
+
+# Start both backend and frontend
 npm run dev
 # Backend: http://localhost:3001
 # Frontend: http://localhost:5173
@@ -118,8 +138,8 @@ npm run dev
 ### Tech Stack:
 - **Backend**: Fastify (standalone service)
 - **Frontend**: Next.js (as a client-side framework, no API routes)
+- **Database**: PostgreSQL + Prisma ORM
 - **Styling**: Tailwind CSS + shadcn/ui
-- **Data**: External REST API
 
 ### Structure:
 ```
@@ -143,8 +163,15 @@ fastify-nextjs-hybrid/
 ### How to Run:
 ```bash
 cd fastify-nextjs-hybrid
+
+# Start PostgreSQL container
+docker-compose up -d
+
 # Terminal 1 - Backend
-cd backend && npm install && npm run dev
+cd backend
+npm install
+npm run db:setup
+npm run dev
 
 # Terminal 2 - Frontend
 cd frontend && npm install && npm run dev
@@ -211,9 +238,31 @@ All three versions include:
 - Need backend flexibility with frontend ease
 - Team knows Next.js but needs API separation
 
+## Database
+
+All three projects now use **PostgreSQL** with **Prisma ORM** for data persistence. Each project has:
+
+- Docker Compose configuration for local PostgreSQL
+- Prisma schema with Customer, TeamMember, and Report models
+- Database seed scripts with sample data
+- Separate database instances on different ports (5432, 5433, 5434)
+
+See **[DATABASE_SETUP.md](./DATABASE_SETUP.md)** for detailed setup instructions.
+
+## Docker Deployment
+
+The Fastify backends are fully containerized and ready for deployment:
+
+- **Multi-stage Docker builds** for optimized production images
+- **Docker Compose** configurations for both development and production
+- **Health checks** and automatic database migrations
+- **Production-ready** configurations with environment variable management
+
+See **[DOCKER_DEPLOYMENT.md](./DOCKER_DEPLOYMENT.md)** for deployment instructions.
+
 ## Development
 
-All versions use the same shadcn/ui components and have identical UI/UX. The mock data is consistent across all three, demonstrating that the user experience is identical regardless of the architectural approach chosen.
+All versions use the same shadcn/ui components and have identical UI/UX. Data is now persisted in PostgreSQL databases, demonstrating real-world data persistence patterns.
 
 ## License
 
