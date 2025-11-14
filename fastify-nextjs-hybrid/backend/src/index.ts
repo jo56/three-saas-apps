@@ -8,6 +8,7 @@ import {
   mockBillingPlans,
   mockTransactions
 } from './data/mock-data.js';
+// import { authenticateService, rateLimitService } from './middleware/auth.js';
 
 const fastify = Fastify({
   logger: true
@@ -17,6 +18,27 @@ const fastify = Fastify({
 await fastify.register(cors, {
   origin: 'http://localhost:3000' // Next.js default port
 });
+
+/**
+ * PRODUCTION AUTHENTICATION (Currently Disabled)
+ *
+ * To enable service-to-service authentication:
+ * 1. Uncomment the import above
+ * 2. Uncomment the middleware registration below
+ * 3. Add SERVICE_SECRET to .env file
+ * 4. Update Next.js to use authenticated client (see frontend/lib/fastify-client.ts)
+ *
+ * This adds:
+ * - Service token validation (Next.js must provide valid JWT)
+ * - Rate limiting (100 requests/minute per service)
+ * - Request logging and monitoring
+ */
+
+// Register authentication middleware (applies to all routes except /health)
+// await fastify.addHook('preHandler', authenticateService);
+
+// Optional: Add rate limiting
+// await fastify.addHook('preHandler', rateLimitService);
 
 // Dashboard API
 fastify.get('/api/dashboard', async (request, reply) => {

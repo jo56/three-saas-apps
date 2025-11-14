@@ -6,6 +6,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Badge } from '@/components/ui/badge';
 import { useEffect, useState } from 'react';
 import { KPI, Activity, AnalyticsData } from '@/lib/types';
+// import { fastifyFetch } from '@/lib/fastify-client'; // PRODUCTION: Uncomment for authenticated API calls
 
 export default function DashboardPage() {
   const [kpis, setKpis] = useState<KPI[]>([]);
@@ -16,13 +17,36 @@ export default function DashboardPage() {
   useEffect(() => {
     async function fetchDashboardData() {
       try {
+        /**
+         * DEMO MODE (Current - Active):
+         * Direct fetch without authentication. Works without Fastify running
+         * if you handle the error gracefully in the catch block.
+         */
         const response = await fetch('http://localhost:3001/api/dashboard');
         const data = await response.json();
+
+        /**
+         * PRODUCTION MODE (Commented):
+         * Uses authenticated client with service-to-service token.
+         * Uncomment below and comment out the direct fetch above.
+         *
+         * ```
+         * const data = await fastifyFetch('/api/dashboard');
+         * ```
+         *
+         * This automatically:
+         * - Generates JWT service token
+         * - Adds X-Service-Token header
+         * - Handles authentication errors
+         * - Provides better error messages
+         */
+
         setKpis(data.kpis);
         setActivities(data.activities);
         setAnalyticsData(data.analyticsData);
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
+        // In production, you might want to show an error UI or retry
       } finally {
         setLoading(false);
       }
