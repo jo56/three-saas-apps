@@ -1,7 +1,7 @@
 "use client"
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import {
   LayoutDashboard,
@@ -10,8 +10,10 @@ import {
   FileText,
   UsersRound,
   Settings,
-  CreditCard
+  CreditCard,
+  LogOut
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -25,6 +27,16 @@ const navigation = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      router.push('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   return (
     <div className="flex h-full w-64 flex-col border-r bg-card">
@@ -52,7 +64,7 @@ export function Sidebar() {
         })}
       </nav>
       <div className="border-t p-4">
-        <div className="flex items-center gap-3 rounded-lg px-3 py-2">
+        <div className="flex items-center gap-3 rounded-lg px-3 py-2 mb-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
             JD
           </div>
@@ -61,6 +73,14 @@ export function Sidebar() {
             <p className="text-xs text-muted-foreground">john@company.com</p>
           </div>
         </div>
+        <Button
+          variant="ghost"
+          className="w-full justify-start text-muted-foreground hover:text-foreground"
+          onClick={handleLogout}
+        >
+          <LogOut className="mr-2 h-4 w-4" />
+          Logout
+        </Button>
       </div>
     </div>
   );
