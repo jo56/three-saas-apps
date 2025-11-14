@@ -15,7 +15,7 @@ const fastify = Fastify({
 
 // Register CORS
 await fastify.register(cors, {
-  origin: 'http://localhost:5173' // Vite default port
+  origin: 'http://localhost:3000' // Next.js default port
 });
 
 // Dashboard API
