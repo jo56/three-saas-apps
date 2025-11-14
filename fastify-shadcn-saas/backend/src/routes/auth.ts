@@ -179,7 +179,7 @@ export async function authRoutes(fastify: FastifyInstance) {
          */
 
       } catch (error) {
-        fastify.log.error('Login error:', error);
+        fastify.log.error({ err: error }, 'Login error');
         reply.code(500);
         return { error: 'Login failed' };
       }
@@ -224,7 +224,7 @@ export async function authRoutes(fastify: FastifyInstance) {
          */
 
       } catch (error) {
-        fastify.log.error('Logout error:', error);
+        fastify.log.error({ err: error }, 'Logout error');
         reply.code(500);
         return { error: 'Logout failed' };
       }
@@ -311,7 +311,7 @@ export async function authRoutes(fastify: FastifyInstance) {
          */
 
       } catch (error) {
-        fastify.log.error('Get user error:', error);
+        fastify.log.error({ err: error }, 'Get user error');
         reply.code(401);
         return { error: 'Invalid or expired token' };
       }
