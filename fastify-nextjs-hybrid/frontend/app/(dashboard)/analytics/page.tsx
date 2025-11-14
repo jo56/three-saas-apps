@@ -63,7 +63,7 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="w-full space-y-8">
       <div>
         <h1 className="text-3xl font-bold">Analytics</h1>
         <p className="text-muted-foreground">Comprehensive insights into your business metrics</p>
@@ -78,7 +78,7 @@ export default function AnalyticsPage() {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="w-full grid gap-4 md:grid-cols-2">
             <Card>
               <CardHeader>
                 <CardTitle>Revenue Trend</CardTitle>
@@ -138,7 +138,7 @@ export default function AnalyticsPage() {
             </Card>
           </div>
 
-          <Card>
+          <Card className="w-full">
             <CardHeader>
               <CardTitle>User Growth</CardTitle>
               <CardDescription>Total users over time</CardDescription>
@@ -169,7 +169,7 @@ export default function AnalyticsPage() {
         </TabsContent>
 
         <TabsContent value="revenue" className="space-y-4">
-          <Card>
+          <Card className="w-full">
             <CardHeader>
               <CardTitle>Revenue Analysis</CardTitle>
               <CardDescription>Detailed revenue metrics</CardDescription>
@@ -196,7 +196,7 @@ export default function AnalyticsPage() {
         </TabsContent>
 
         <TabsContent value="users" className="space-y-4">
-          <Card>
+          <Card className="w-full">
             <CardHeader>
               <CardTitle>User Metrics</CardTitle>
               <CardDescription>User growth and churn analysis</CardDescription>
@@ -238,7 +238,7 @@ export default function AnalyticsPage() {
         </TabsContent>
 
         <TabsContent value="conversion" className="space-y-4">
-          <Card>
+          <Card className="w-full">
             <CardHeader>
               <CardTitle>Conversion Funnel</CardTitle>
               <CardDescription>Trial to paid conversion analysis</CardDescription>
@@ -258,7 +258,7 @@ export default function AnalyticsPage() {
             </CardContent>
           </Card>
 
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="w-full grid gap-4 md:grid-cols-3">
             <Card>
               <CardHeader>
                 <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
