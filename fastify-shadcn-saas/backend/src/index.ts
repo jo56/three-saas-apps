@@ -8,6 +8,8 @@ import {
   mockBillingPlans,
   mockTransactions
 } from './data/mock-data.js';
+import { authRoutes } from './routes/auth.js';
+// import { authenticateUser, rateLimitByUser } from './middleware/auth.js';
 
 const fastify = Fastify({
   logger: true
@@ -17,6 +19,39 @@ const fastify = Fastify({
 await fastify.register(cors, {
   origin: 'http://localhost:5173' // Vite default port
 });
+
+/**
+ * AUTHENTICATION ROUTES (Always Active - Demo Mode)
+ *
+ * These routes handle user login/logout/token verification.
+ * Currently in demo mode - accepts any credentials.
+ *
+ * Endpoints:
+ * - POST /api/auth/login
+ * - POST /api/auth/logout
+ * - GET /api/auth/me
+ */
+await fastify.register(authRoutes);
+
+/**
+ * PRODUCTION AUTHENTICATION MIDDLEWARE (Currently Disabled)
+ *
+ * To enable JWT validation on all API endpoints:
+ * 1. Uncomment the import above
+ * 2. Uncomment the middleware registration below
+ * 3. Add JWT_SECRET to .env file
+ * 4. Update React app to send tokens (see frontend/src/lib/api-client.ts)
+ *
+ * This will protect all endpoints except:
+ * - /health
+ * - /api/auth/* (login, logout, register)
+ */
+
+// Register authentication middleware (applies to all routes except public ones)
+// await fastify.addHook('preHandler', authenticateUser);
+
+// Optional: Add rate limiting per user
+// await fastify.addHook('preHandler', rateLimitByUser);
 
 // Dashboard API
 fastify.get('/api/dashboard', async (request, reply) => {
