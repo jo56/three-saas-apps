@@ -30,6 +30,9 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production
 
+# Install tsx and prisma for running migrations and seed scripts
+RUN npm install tsx prisma
+
 # Copy built files from builder
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma

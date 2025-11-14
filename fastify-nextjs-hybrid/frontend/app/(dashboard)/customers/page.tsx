@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/select';
 import { Search, Filter } from 'lucide-react';
 import type { Customer } from '@/lib/types';
+// import { fastifyFetch } from '@/lib/fastify-client'; // PRODUCTION: Uncomment for authenticated API calls
 
 export default function CustomersPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -32,8 +33,13 @@ export default function CustomersPage() {
   useEffect(() => {
     async function fetchCustomers() {
       try {
+        // DEMO MODE (Active): Direct fetch without authentication
         const response = await fetch('http://localhost:3001/api/customers');
         const data = await response.json();
+
+        // PRODUCTION MODE (Commented): Use authenticated client
+        // const data = await fastifyFetch<Customer[]>('/api/customers');
+
         setCustomers(data);
       } catch (error) {
         console.error('Failed to fetch customers:', error);
