@@ -36,14 +36,14 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="w-full space-y-8">
       <div>
         <h1 className="text-3xl font-bold">Dashboard</h1>
         <p className="text-muted-foreground">Welcome back! Here's what's happening today.</p>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="w-full grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {kpis.map((kpi) => (
           <Card key={kpi.title}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -67,9 +67,9 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+      <div className="w-full grid gap-4 lg:grid-cols-3">
         {/* Revenue Chart */}
-        <Card className="col-span-4">
+        <Card className="w-full lg:col-span-2">
           <CardHeader>
             <CardTitle>Revenue Overview</CardTitle>
             <CardDescription>Monthly revenue for the last 9 periods</CardDescription>
@@ -99,7 +99,7 @@ export default function DashboardPage() {
         </Card>
 
         {/* Recent Activity */}
-        <Card className="col-span-3">
+        <Card className="lg:col-span-1">
           <CardHeader>
             <CardTitle>Recent Activity</CardTitle>
             <CardDescription>Latest updates from your account</CardDescription>
@@ -133,7 +133,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="w-full grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Customers</CardTitle>

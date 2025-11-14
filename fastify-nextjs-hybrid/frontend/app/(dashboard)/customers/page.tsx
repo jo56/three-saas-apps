@@ -90,13 +90,13 @@ export default function CustomersPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="w-full space-y-8">
       <div>
         <h1 className="text-3xl font-bold">Customers</h1>
         <p className="text-muted-foreground">Manage and view all your customers</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="w-full grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Customers</CardTitle>
@@ -137,7 +137,7 @@ export default function CustomersPage() {
         </Card>
       </div>
 
-      <Card>
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>Customer List</CardTitle>
           <CardDescription>View and manage all customer accounts</CardDescription>
