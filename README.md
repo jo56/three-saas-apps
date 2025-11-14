@@ -2,7 +2,7 @@
 
 This repository demonstrates three different architectural approaches for building a B2B SaaS application using shadcn/ui components. All three versions look identical but showcase different tech stack architectures.
 
-**NEW**: All projects now use **PostgreSQL** with **Prisma ORM** for data persistence! See [DATABASE_SETUP.md](./DATABASE_SETUP.md) for setup instructions.
+All projects use **PostgreSQL** with **Prisma ORM** for data persistence. See [DATABASE_SETUP.md](./DATABASE_SETUP.md) for setup instructions.
 
 ## Version 1: Full Next.js Stack (`nextjs-shadcn-saas/`)
 
