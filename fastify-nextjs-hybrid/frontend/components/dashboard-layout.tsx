@@ -1,14 +1,17 @@
-import { Sidebar } from './sidebar';
+import { AppSidebar } from './new-sidebar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-screen">
-      <Sidebar />
-      <main className="flex-1 overflow-y-auto bg-background">
-        <div className="container mx-auto p-8">
-          {children}
-        </div>
-      </main>
-    </div>
+    <SidebarProvider>
+      <div className="flex h-screen">
+        <AppSidebar />
+        <main className="flex-1 overflow-y-auto bg-background">
+          <div className="container mx-auto p-8">
+            {children}
+          </div>
+        </main>
+      </div>
+    </SidebarProvider>
   );
 }
