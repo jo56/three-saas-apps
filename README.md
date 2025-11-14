@@ -45,26 +45,38 @@ cd nextjs-shadcn-saas
 # Start PostgreSQL container
 docker-compose up -d
 
-# Install dependencies and setup database
+# Install dependencies
 npm install
+
+# Setup and seed database
 npm run db:setup
 
-# Start the application
+# Start the Next.js application
 npm run dev
 # Visit http://localhost:3000
 ```
+
+**Note:** Unlike the Fastify projects, this is a monolithic Next.js app where everything runs in one process. Docker only provides the PostgreSQL database.
 
 ### Pros:
 - Single codebase for frontend and backend
 - Excellent DX with hot reload for both
 - Built-in optimizations (Image, Font, etc.)
-- Easy deployment (Vercel, etc.)
+- Easy deployment (Vercel, Netlify, etc.)
 - Server-side rendering capabilities
+- Simplest architecture to understand and maintain
+- Great for marketing pages (SEO-friendly)
 
 ### Cons:
 - Tightly coupled frontend and backend
 - Harder to scale teams (full-stack developers needed)
 - Backend limited to Node.js/JavaScript
+- API routes slower than dedicated backend frameworks
+
+### Database Notes:
+- PostgreSQL runs on port 5434 (different from other projects to avoid conflicts)
+- Database must be manually set up with `npm run db:setup`
+- No Docker containerization for the Next.js app (runs locally only)
 
 ---
 
@@ -277,6 +289,8 @@ All three versions include:
 - Don't need microservices
 - Want simplest deployment
 - Backend logic is simple
+- Need great SEO for marketing pages
+- Want server-side rendering out of the box
 
 ### Choose Fastify+React when:
 - Need maximum flexibility
@@ -284,12 +298,14 @@ All three versions include:
 - Want to use different backend language later
 - Building a complex, scalable system
 - Need fine-grained control
+- SEO is not a priority (dashboard-focused app)
 
 ### Choose Fastify+Next.js Hybrid when:
 - Want Next.js DX but separate backend
 - Backend already exists/is managed separately
 - Need backend flexibility with frontend ease
 - Team knows Next.js but needs API separation
+- Need good SEO with a high-performance API backend
 
 ## Database
 
@@ -299,7 +315,7 @@ All three projects now use **PostgreSQL** with **Prisma ORM** for data persisten
 - Prisma schema with Customer, TeamMember, and Report models
 - **Automatic database seeding** when using Docker
 - Separate database instances on different ports to avoid conflicts:
-  - `nextjs-shadcn-saas`: PostgreSQL on port 5432
+  - `nextjs-shadcn-saas`: PostgreSQL on port 5434
   - `fastify-shadcn-saas`: PostgreSQL on port 5432
   - `fastify-nextjs-hybrid`: PostgreSQL on port 5433
 
@@ -317,12 +333,17 @@ cd backend && npm run db:setup && cd ..
 
 **For Next.js project (nextjs-shadcn-saas):**
 ```bash
-# Start PostgreSQL
+# Start PostgreSQL container
 docker-compose up -d
 
-# Setup database
+# Install dependencies (includes tsx for seeding)
+npm install
+
+# Setup and seed database (must be run manually)
 npm run db:setup
 ```
+
+**Note:** The Next.js project requires manual database setup - it does not auto-seed on startup like the Fastify projects.
 
 See **[DATABASE_SETUP.md](./DATABASE_SETUP.md)** for detailed setup instructions and troubleshooting.
 
