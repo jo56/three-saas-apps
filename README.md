@@ -98,19 +98,39 @@ fastify-shadcn-saas/
 ```
 
 ### How to Run:
+
+**Option 1: Docker (Recommended - Backend + Database)**
 ```bash
 cd fastify-shadcn-saas
 
-# Start PostgreSQL container
+# Start PostgreSQL + Backend containers (includes auto-seeding)
 docker-compose up -d
 
-# Install dependencies
+# Check logs to verify backend is running
+docker-compose logs -f backend
+
+# In a separate terminal, install frontend dependencies and start
+cd frontend
+npm install
+npm run dev
+# Frontend: http://localhost:5173
+# Backend API: http://localhost:3001
+```
+
+**Option 2: Local Development (All services)**
+```bash
+cd fastify-shadcn-saas
+
+# Start PostgreSQL container only
+docker-compose up -d postgres
+
+# Install all dependencies
 npm run install:all
 
 # Setup database (from backend directory)
 cd backend && npm run db:setup && cd ..
 
-# Start both backend and frontend
+# Start both backend and frontend with concurrently
 npm run dev
 # Backend: http://localhost:3001
 # Frontend: http://localhost:5173
@@ -122,12 +142,18 @@ npm run dev
 - Backend can be swapped (Python, Go, etc.)
 - Easy to scale teams (dedicated frontend/backend devs)
 - Flexibility in tech stack evolution
+- Docker setup for easy backend deployment
 
 ### Cons:
 - More complex setup and deployment
 - Need CORS configuration
 - Two separate codebases to maintain
 - More build tooling required
+
+### Database Notes:
+- Database is automatically seeded when using Docker
+- Backend runs on port 3001, PostgreSQL on port 5432
+- No need to run `npm run db:setup` when using Docker
 
 ---
 
@@ -161,21 +187,42 @@ fastify-nextjs-hybrid/
 ```
 
 ### How to Run:
+
+**Option 1: Docker (Recommended - Backend + Database)**
 ```bash
 cd fastify-nextjs-hybrid
 
-# Start PostgreSQL container
+# Start PostgreSQL + Backend containers (includes auto-seeding)
 docker-compose up -d
 
-# Terminal 1 - Backend
-cd backend
-npm install
-npm run db:setup
-npm run dev
+# Check logs to verify backend is running
+docker-compose logs -f backend
 
-# Terminal 2 - Frontend
-cd frontend && npm install && npm run dev
-# Visit http://localhost:3000
+# In a separate terminal, install frontend dependencies and start
+cd frontend
+npm install
+npm run dev
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:3001
+```
+
+**Option 2: Local Development (All services)**
+```bash
+cd fastify-nextjs-hybrid
+
+# Start PostgreSQL container only
+docker-compose up -d postgres
+
+# Install all dependencies
+npm run install:all
+
+# Setup database (from backend directory)
+cd backend && npm run db:setup && cd ..
+
+# Start both backend and frontend with concurrently
+npm run dev
+# Backend: http://localhost:3001
+# Frontend: http://localhost:3000
 ```
 
 ### Pros:
@@ -184,12 +231,18 @@ cd frontend && npm install && npm run dev
 - Independent scaling of services
 - Can leverage Next.js features (image optimization, etc.)
 - Clear API contract
+- Docker setup for easy backend deployment
 
 ### Cons:
 - Can't use Next.js server-side features easily
 - Requires API proxy/CORS setup
 - More deployment complexity
 - Network overhead for API calls
+
+### Database Notes:
+- Database is automatically seeded when using Docker
+- Backend runs on port 3001, PostgreSQL on port 5433 (different from fastify-shadcn-saas)
+- No need to run `npm run db:setup` when using Docker
 
 ---
 
@@ -244,21 +297,65 @@ All three projects now use **PostgreSQL** with **Prisma ORM** for data persisten
 
 - Docker Compose configuration for local PostgreSQL
 - Prisma schema with Customer, TeamMember, and Report models
-- Database seed scripts with sample data
-- Separate database instances on different ports (5432, 5433, 5434)
+- **Automatic database seeding** when using Docker
+- Separate database instances on different ports to avoid conflicts:
+  - `nextjs-shadcn-saas`: PostgreSQL on port 5432
+  - `fastify-shadcn-saas`: PostgreSQL on port 5432
+  - `fastify-nextjs-hybrid`: PostgreSQL on port 5433
 
-See **[DATABASE_SETUP.md](./DATABASE_SETUP.md)** for detailed setup instructions.
+### Quick Database Setup
+
+**For Fastify projects (fastify-shadcn-saas, fastify-nextjs-hybrid):**
+```bash
+# Using Docker (Recommended) - Database is auto-seeded
+docker-compose up -d
+
+# Using local development - Manual setup required
+docker-compose up -d postgres
+cd backend && npm run db:setup && cd ..
+```
+
+**For Next.js project (nextjs-shadcn-saas):**
+```bash
+# Start PostgreSQL
+docker-compose up -d
+
+# Setup database
+npm run db:setup
+```
+
+See **[DATABASE_SETUP.md](./DATABASE_SETUP.md)** for detailed setup instructions and troubleshooting.
 
 ## Docker Deployment
 
-The Fastify backends are fully containerized and ready for deployment:
+The Fastify backends (`fastify-shadcn-saas` and `fastify-nextjs-hybrid`) are fully containerized and ready for deployment:
 
 - **Multi-stage Docker builds** for optimized production images
 - **Docker Compose** configurations for both development and production
 - **Health checks** and automatic database migrations
+- **Automatic database seeding** on first run
 - **Production-ready** configurations with environment variable management
 
-See **[DOCKER_DEPLOYMENT.md](./DOCKER_DEPLOYMENT.md)** for deployment instructions.
+### Quick Start with Docker
+
+```bash
+# For fastify-shadcn-saas
+cd fastify-shadcn-saas
+docker-compose up -d
+
+# For fastify-nextjs-hybrid
+cd fastify-nextjs-hybrid
+docker-compose up -d
+```
+
+Both will start:
+- PostgreSQL database
+- Fastify backend API with auto-seeding
+- Health checks and monitoring
+
+Then start the frontend separately (see project-specific instructions above).
+
+See **[DOCKER_DEPLOYMENT.md](./DOCKER_DEPLOYMENT.md)** for detailed deployment instructions, production setup, and troubleshooting.
 
 ## Development
 
